@@ -6,6 +6,8 @@
 <title>Oráculo Esotérico</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+
+
 <style>
   body {
     background: #121212;
@@ -1610,21 +1612,46 @@ async function descargarResultado() {
 }
 
 
-function compartirResultado() {
+async function compartirResultado() {
   const nombre = document.querySelector('#resultado h2')?.innerText || '';
   const frase = document.getElementById('fraseSimbolo')?.innerText || '';
   const guia = document.getElementById('guiaSimbolo')?.innerText || '';
   const texto = `${nombre}\n\n"${frase}"\n\n${guia}`;
 
-  if (navigator.share) {
-    navigator.share({
-      title: 'Tu símbolo esotérico',
-      text: texto
-    }).catch((error) => console.log("No se pudo compartir:", error));
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text(nombre, 10, 20);
+  doc.setFontSize(12);
+  doc.text(frase, 10, 40);
+  doc.text(guia, 10, 60);
+
+  const pdfBlob = doc.output('blob');
+  const pdfFile = new File([pdfBlob], `${nombre.replace(/\s+/g, '_')}.pdf`, { type: 'application/pdf' });
+
+  if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+    try {
+      await navigator.share({
+        title: 'Tu símbolo esotérico',
+        text: nombre,
+        files: [pdfFile],
+      });
+    } catch (err) {
+      console.log("No se pudo compartir el PDF:", err);
+      alert("El navegador bloqueó el uso de compartir PDF.");
+    }
   } else {
-    alert("Tu navegador no permite compartir directamente, pero podés copiar el texto manualmente.");
+    // Si no se puede compartir, simplemente lo descarga
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(pdfBlob);
+    link.download = `${nombre.replace(/\s+/g, '_')}.pdf`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+    alert("Tu navegador no permite compartir, pero se descargó el PDF.");
   }
 }
+
 
 
 
