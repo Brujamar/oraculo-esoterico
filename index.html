@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Oráculo Esotérico</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+  body {
+    background: #121212;
+    color: #eee;
+    font-family: "My Soul", cursive;;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    overflow-x: hidden;
+   
+  }
+  #particulas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(48,48,79,0.5) 0%, transparent 80%);
+  }
+  #pantalla-inicio {
+    
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background:  radial-gradient(circle, rgba(28,28,46,0.9), rgba(0,0,0,0.9)),
+    url('imagenes/principal/lazo1.png') center center / cover no-repeat;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  text-align: center;
+  font-family: "My Soul", cursive;
+}
+#pantalla-inicio button {
+  margin-top: 20px;
+  padding: 14px 28px;
+  background-color: #592ea6;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+#pantalla-inicio button:hover {
+  background-color: #8f5ce1;
+}
+  h1 {
+    margin-bottom: 1rem;
+  }
+  button {
+    background-color: #592ea6;
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    margin: 10px 5px;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  button:hover {
+    background-color: #8f5ce1;
+  }
+  #resultado {
+    margin-top: 30px;
+  }
+  .simbolo-img {
+    width: 150px;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 0 10px rgba(180,160,255,0.7);
+  }
+ 
+
+
+
+
+
+
+
+
+
+
+
+</style>
+</head>
+<body>
+
+<canvas id="particulas"></canvas>
+    <!-- PANTALLA DE INICIO -->
+<div id="pantalla-inicio">
+   
+    <h2>¿Estás preparada para descubrir tu carta, piedra o runa?</h2>
+  <button onclick="entrarAlOraculo()">Adelante</button>
+</div>
+
+<!-- CONTENIDO COMPLETO DEL ORÁCULO -->
+<div id="contenido-oraculo" style="display: none;">
+
+
+<h1>Oráculo</h1>
+<h6>Elegi un botón para elegir tu carta, piedra o runa</h6>
+
+<div>
+  <button id="btnPiedras">Revelar Piedra</button>
+  <button id="btnCartas">Revelar Carta</button>
+  <button id="btnRunas">Revelar Runa</button>
+</div>
+
+<div id="resultado"></div>
+</div>
+
+
+
+
+<audio id="sonido-magico" src="sonidos/snowfall.mp3" preload="auto"></audio>
+<script>
+// Datos simplificados para ejemplo
+const piedras = [
+  {nombre:"Amatista", 
+  frase:"Silencio violeta. La voz interna florece en calma.", 
+  guia:"Conectá con tu intuición.", 
+  imagen:"imagenes/piedras/Amatista.jpg"},
+
+  {nombre:"Cuarzo Rosa",
+    frase:"El amor en todas sus formas florece aquí.",
+    guia:"Piedra del amor incondicional y la compasión.",
+    imagen:"imagenes/piedras/Cuarzo Rosa.jpg"
+  },
+
+{
+    tipo: "Piedra",
+    nombre: "Obsidiana",
+    frase: "La verdad es filosa, pero libera.",
+    guia: "Revela lo oculto y corta energías estancadas.",
+    imagen:"imagenes/piedras/Obsidiana.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Citrino",
+    frase: "Tu luz atrae lo que merecés.",
+    guia: "Piedra del éxito, prosperidad y alegría.",
+    imagen:"imagenes/piedras/Citrino.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Lapislázuli",
+    frase: "La sabiduría antigua se activa en tu voz.",
+    guia: "Piedra del tercer ojo y la verdad espiritual.",
+    imagen:"imagenes/piedras/Lapislázuli.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Turmalina Negra",
+    frase: "Escudo invisible que protege sin límites.",
+    guia: "Protección energética potente contra negatividad.",
+    imagen:"imagenes/piedras/Turmalina Negra.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Aventurina Verde",
+    frase: "La abundancia es una forma de confianza.",
+    guia: "Atracción de buena suerte y oportunidades.",
+    imagen:"imagenes/piedras/Aventurina Verde.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Calcita Naranja",
+    frase: "Brillás cuando honrás tu placer.",
+    guia: "Energía creativa, alegría y liberación del cuerpo.",
+    imagen:"imagenes/piedras/Calcita Naranja.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Jaspe Rojo",
+    frase: "Tu fuego interno enciende la acción.",
+    guia: "Vitalidad, pasión y conexión con la tierra.",
+    imagen:"imagenes/piedras/Jaspe Rojo.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Fluorita",
+    frase: "Tu energía se ordena como un arco iris interior.",
+    guia: "Estabilidad, concentración y claridad.",
+    imagen:"imagenes/piedras/Fluorita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Malaquita",
+    frase: "Transformás lo denso en belleza poderosa.",
+    guia: "Purificación emocional e intensidad alquímica.",
+    imagen:"imagenes/piedras/Malaquita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Selenita",
+    frase: "Luz suave que limpia y eleva tu aura.",
+    guia: "Purificación energética y conexión espiritual.",
+    imagen:"imagenes/piedras/Selenita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Hematite",
+    frase: "Raíz profunda, mente alineada.",
+    guia: "Enraizamiento, enfoque y equilibrio energético.",
+    imagen:"imagenes/piedras/Hematite.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Ágata",
+    frase: "La belleza está en las capas de tu historia.",
+    guia: "Protección suave y equilibrio emocional.",
+    imagen:"imagenes/piedras/Ágata.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Pirita",
+    frase: "El oro interno también brilla por fuera.",
+    guia: "Protección y atracción de abundancia material.",
+    imagen:"imagenes/piedras/Pirita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Ámbar",
+    frase: "El tiempo guarda historias que sanan.",
+    guia: "Protección y energía cálida para el bienestar.",
+    imagen:"imagenes/piedras/Ámbar.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cornalina",
+    frase: "La pasión encendida crea realidades nuevas.",
+    guia: "Creatividad, motivación y energía sexual.",
+    imagen:"imagenes/piedras/Cornalina.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Rodonita",
+    frase: "El amor propio como llave para sanar.",
+    guia: "Equilibrio emocional y perdón profundo.",
+    imagen:"imagenes/piedras/Rodonita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Calcita Azul",
+    frase: "Tu calma tiene voz propia.",
+    guia: "Relajación, confianza y armonía emocional.",
+    imagen:"imagenes/piedras/Calcita Azul.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Ojo de Tigre",
+    frase: "El coraje ve incluso en la sombra.",
+    guia: "Fuerza personal y equilibrio entre extremos.",
+    imagen:"imagenes/piedras/Ojo de Tigre.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Transparente",
+    frase: "El cristal que refleja la pureza de tu esencia.",
+    guia: "Amplifica la energía y potencia la claridad mental.",
+    imagen:"imagenes/piedras/Cuarzo Transparente.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Rhodonita",
+    frase: "El perdón es la llave que abre tu corazón.",
+    guia: "Sanación emocional y equilibrio del amor propio.",
+    imagen:"imagenes/piedras/Rhodonita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Lepidolita",
+    frase: "La calma llega cuando sueltas el control.",
+    guia: "Reduce ansiedad y promueve paz interior.",
+    imagen:"imagenes/piedras/Lepidolita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Labradorita",
+    frase: "El misterio y la magia brillan en tu aura.",
+    guia: "Protección espiritual y despertar de la intuición.",
+    imagen:"imagenes/piedras/Labradorita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Howlita",
+    frase: "La paciencia florece en el silencio del alma.",
+    guia: "Calma mental y eliminación de estrés.",
+    imagen:"imagenes/piedras/Howlita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Granate",
+    frase: "Tu fuego interno nunca se apaga.",
+    guia: "Energía, vitalidad y pasión renovada.",
+    imagen:"imagenes/piedras/Granate.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Turquesa",
+    frase: "La verdad y la protección viajan juntas.",
+    guia: "Comunicación clara y protección energética.",
+    imagen:"imagenes/piedras/Turquesa.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Amazonita",
+    frase: "La voz de tu corazón merece ser escuchada.",
+    guia: "Equilibrio emocional y expresión auténtica.",
+    imagen:"imagenes/piedras/Amazonita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Sodalita",
+    frase: "La lógica y la intuición se encuentran en vos.",
+    guia: "Claridad mental y apertura espiritual.",
+    imagen:"imagenes/piedras/Sodalita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Celestina",
+    frase: "Susurros de los ángeles flotan en tu aura.",
+    guia: "Conexión espiritual y elevación energética.",
+    imagen:"imagenes/piedras/Celestina.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Esmeralda",
+    frase: "La verdad del corazón es medicina pura.",
+    guia: "Amor universal, sabiduría y sanación emocional.",
+    imagen:"imagenes/piedras/Esmeralda.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Topacio",
+    frase: "Brillás con la luz de la verdad interior.",
+    guia: "Claridad, confianza y manifestación.",
+    imagen:"imagenes/piedras/Topacio.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Rubí",
+    frase: "El fuego del alma nunca se extingue.",
+    guia: "Pasión, poder interior y vitalidad sagrada.",
+    imagen:"imagenes/piedras/Rubí.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Zafiro",
+    frase: "La nobleza interior se reconoce en el silencio.",
+    guia: "Sabiduría, visión espiritual y poder mental.",
+    imagen:"imagenes/piedras/Zafiro.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra Luna",
+    frase: "El ciclo de la luna vive en vos.",
+    guia: "Feminidad, emociones y creatividad sutil.",
+    imagen:"imagenes/piedras/Piedra Luna.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Unakita",
+    frase: "Tu pasado florece en sabiduría.",
+    guia: "Equilibra emociones y promueve sanación profunda.",
+    imagen:"imagenes/piedras/Unakita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Azurita",
+    frase: "Ver más allá de lo visible es un don cultivado.",
+    guia: "Intuición elevada y visión espiritual.",
+    imagen:"imagenes/piedras/Azurita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Crisocola",
+    frase: "Callar también es una forma de sanar.",
+    guia: "Apoyo para liberar emociones reprimidas.",
+    imagen:"imagenes/piedras/Crisocola.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Apatita",
+    frase: "Tu expresión creativa se vuelve infinita.",
+    guia: "Claridad mental y motivación.",
+    imagen:"imagenes/piedras/Apatita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cianita",
+    frase: "La palabra alineada abre portales.",
+    guia: "Favorece la comunicación clara y canalización.",
+    imagen:"imagenes/piedras/Cianita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Prehnita",
+    frase: "La preparación interna crea milagros externos.",
+    guia: "Piedra de sanación profunda y visualización consciente.",
+    imagen:"imagenes/piedras/Prehnita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Aragonita",
+    frase: "El anclaje trae paz en medio de la tormenta.",
+    guia: "Estabilidad emocional y conexión con la tierra.",
+    imagen:"imagenes/piedras/Aragonita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Serpentina",
+    frase: "La renovación comienza desde adentro.",
+    guia: "Purificación energética y despertar espiritual.",
+    imagen:"imagenes/piedras/Serpentina.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Kunzita",
+    frase: "Tu ternura también es poder.",
+    guia: "Amor espiritual, compasión y apertura del corazón.",
+    imagen:"imagenes/piedras/Kunzita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Espato de Islandia",
+    frase: "La luz puede atravesar las sombras más densas.",
+    guia: "Claridad, inspiración y despertar espiritual.",
+    imagen:"imagenes/piedras/Espato de Islandia.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Shungita",
+    frase: "Protección profunda para cuerpo y alma.",
+    guia: "Eliminación de energías negativas y purificación.",
+    imagen:"imagenes/piedras/Shungita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Septaria",
+    frase: "La calma emerge del caos con paciencia.",
+    guia: "Equilibrio, tierra y conexión ancestral.",
+    imagen:"imagenes/piedras/Septaria.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Onix Negro",
+    frase: "La fuerza interior se sostiene en la sombra.",
+    guia: "Protección y fortaleza emocional.",
+    imagen:"imagenes/piedras/Onix Negro.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Calcopirita",
+    frase: "El brillo dorado es la luz de tu poder interno.",
+    guia: "Energía, abundancia y manifestación.",
+    imagen:"imagenes/piedras/Calcopirita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Dioptasa",
+    frase: "El amor incondicional se despliega desde el corazón.",
+    guia: "Sanación emocional y apertura del corazón.",
+    imagen:"imagenes/piedras/Dioptasa.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Heliodoro",
+    frase: "El sol interior nunca deja de brillar.",
+    guia: "Energía, optimismo y fuerza vital.",
+    imagen:"imagenes/piedras/Heliodoro.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Moldavita",
+    frase: "Te atraviesa el cambio que transforma todo.",
+    guia: "Piedra de transformación intensa y expansión espiritual.",
+    imagen:"imagenes/piedras/Moldavita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Larimar",
+    frase: "El océano interno encuentra su voz.",
+    guia: "Calma, fluidez y conexión con lo femenino divino.",
+    imagen:"imagenes/piedras/Larimar.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Dumortierita",
+    frase: "La mente clara crea realidades nuevas.",
+    guia: "Concentración, disciplina y paciencia.",
+    imagen:"imagenes/piedras/dumortierita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Fuchsita",
+    frase: "El brillo verde es tu salud renovada.",
+    guia: "Vitalidad, equilibrio y sanación emocional.",
+    imagen:"imagenes/piedras/Fuchsita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra del Sol",
+    frase: "La alegría es un derecho que te pertenece.",
+    guia: "Felicidad, energía y optimismo.",
+    imagen:"imagenes/piedras/Piedra del Sol.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra de Sangre (Heliotropo)",
+    frase: "Tu sangre recuerda tu linaje espiritual.",
+    guia: "Protección vital, fuerza ancestral y coraje.",
+    imagen:"imagenes/piedras/Piedra de Sangre (Heliotropo).jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Obsidiana Dorada",
+    frase: "La luz en la oscuridad revela tu poder.",
+    guia: "Transformación y protección.",
+    imagen:"imagenes/piedras/Obsidiana Dorada.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Obsidiana Copo de Nieve",
+    frase: "La pureza se mezcla con la sombra para sanar.",
+    guia: "Equilibrio emocional y claridad mental.",
+    imagen:"imagenes/piedras/Obsidiana Copo de Nieve.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Tanzanita",
+    frase: "Tu espíritu viaja más allá del tiempo.",
+    guia: "Elevación espiritual y conexión profunda.",
+    imagen:"imagenes/piedras/Tanzanita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Crisoprasa",
+    frase: "La esperanza verde renace en tu corazón.",
+    guia: "Calma emocional y nuevas oportunidades.",
+    imagen:"imagenes/piedras/Crisoprasa.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Iolita",
+    frase: "Tus visiones son puentes hacia el futuro.",
+    guia: "Intuición y apertura a nuevas perspectivas.",
+    imagen:"imagenes/piedras/Iolita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Zoisita",
+    frase: "La transformación es la danza de la vida.",
+    guia: "Sanación y cambio positivo.",
+    imagen:"imagenes/piedras/Zoisita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Estaurolita",
+    frase: "La cruz interior sostiene tu camino.",
+    guia: "Protección espiritual y equilibrio.",
+    imagen:"imagenes/piedras/Estaurolita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Epidota",
+    frase: "El crecimiento florece en lo pequeño.",
+    guia: "Optimismo y despertar interior.",
+    imagen:"imagenes/piedras/Epidota.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Halita",
+    frase: "La purificación limpia tu esencia más profunda.",
+    guia: "Claridad y renovación energética.",
+    imagen:"imagenes/piedras/Halita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Magnetita",
+    frase: "La atracción es una fuerza que comienza en ti.",
+    guia: "Energía magnética y enfoque.",
+    imagen:"imagenes/piedras/Magnetita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Marcasita",
+    frase: "La luz en los detalles brilla con fuerza.",
+    guia: "Claridad mental y precisión.",
+    imagen:"imagenes/piedras/Marcasita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Aventurina Azul",
+    frase: "La tranquilidad calma las tormentas internas.",
+    guia: "Paz emocional y relajación.",
+    imagen:"imagenes/piedras/Aventurina Azul.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Aventurina Naranja",
+    frase: "El entusiasmo renace en cada paso.",
+    guia: "Energía creativa y motivación.",
+    imagen:"imagenes/piedras/Aventurina Naranja.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Calcita Verde",
+    frase: "La sanación comienza con la aceptación.",
+    guia: "Equilibrio y curación del corazón.",
+    imagen:"imagenes/piedras/Calcita Verde.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Peridoto",
+    frase: "La luz del sol se refleja en tu alma.",
+    guia: "Abundancia y energía positiva.",
+    imagen:"imagenes/piedras/Peridoto.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Espinela",
+    frase: "El coraje renace en cada desafío.",
+    guia: "Energía y fortaleza interior.",
+    imagen:"imagenes/piedras/Espinela.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Jet (Azabache)",
+    frase: "El escudo negro protege tu espíritu.",
+    guia: "Protección y purificación.",
+    imagen:"imagenes/piedras/Jet (Azabache).jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuprita",
+    frase: "El fuego interno ilumina tu camino.",
+    guia: "Energía vital y renovación.",
+    imagen:"imagenes/piedras/Cuprita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Fresa",
+    frase: "El amor dulce florece en tu ser.",
+    guia: "Amor y alegría suavizados.",
+    imagen:"imagenes/piedras/Cuarzo Fresa.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Ahumado",
+    frase: "La sombra se disuelve en la luz interior.",
+    guia: "Protección y liberación de energías negativas.",
+    imagen:"imagenes/piedras/Cuarzo Ahumado.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Azul",
+    frase: "La calma azul guía tu palabra.",
+    guia: "Comunicación clara y serenidad.",
+    imagen:"imagenes/piedras/Cuarzo Azul.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Fantasma",
+    frase: "Tus capas internas cuentan tu historia.",
+    guia: "Transformación y sanación profunda.",
+    imagen:"imagenes/piedras/Cuarzo Fantasma.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Aura",
+    frase: "Los colores de tu alma brillan sin miedo.",
+    guia: "Elevación energética y alegría.",
+    imagen:"imagenes/piedras/Cuarzo Aura.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Rutilado",
+    frase: "Las hebras de luz iluminan tu sendero.",
+    guia: "Claridad mental y aumento de energía espiritual.",
+    imagen:"imagenes/piedras/Cuarzo Rutilado.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Citrino Natural",
+    frase: "La energía solar te invita a brillar.",
+    guia: "Prosperidad, alegría y motivación.",
+    imagen:"imagenes/piedras/Cuarzo Citrino Natural.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Lemuriano",
+    frase: "Memorias ancestrales despiertan en tu alma.",
+    guia: "Sabiduría antigua y conexión espiritual profunda.",
+    imagen:"imagenes/piedras/Cuarzo Lemuriano.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Herkimer",
+    frase: "La pureza cristalina eleva tus vibraciones.",
+    guia: "Claridad, sanación y aumento energético.",
+    imagen:"imagenes/piedras/cuarzo Herkimer.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Cuarzo Rosa Ahumado",
+    frase: "El amor y la tierra se abrazan en ti.",
+    guia: "Sanación emocional con estabilidad y enraizamiento.",
+    imagen:"imagenes/piedras/Cuarzo Rosa Ahumado.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Obsidiana Arcoíris",
+    frase: "Colores ocultos brillan en la oscuridad.",
+    guia: "Protección y transformación emocional.",
+    imagen:"imagenes/piedras/Obsidiana Arcoíris.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Obsidiana Azul",
+    frase: "La calma del cielo invade tu espíritu.",
+    guia: "Tranquilidad y claridad mental.",
+    imagen:"imagenes/piedras/Obsidiana Azul.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Obsidiana Verde",
+    frase: "La sanación florece en lo profundo.",
+    guia: "Purificación y renovación emocional.",
+    imagen:"imagenes/piedras/Obsidiana Verde.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra Shiva Lingam",
+    frase: "La energía cósmica circula en tu ser.",
+    guia: "Equilibrio y fuerza espiritual.",
+    imagen:"imagenes/piedras/Piedra Shiva Lingam.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra Boji",
+    frase: "Dualidad armoniosa en tu interior.",
+    guia: "Equilibrio de energías masculinas y femeninas.",
+    imagen:"imagenes/piedras/Piedra Boji.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra Imán",
+    frase: "Atraés lo que vibra contigo.",
+    guia: "Poder de atracción y magnetismo personal.",
+    imagen:"imagenes/piedras/Piedra Imán.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra Apache Tear",
+    frase: "Las lágrimas de la tierra sanan tu dolor.",
+    guia: "Sanación emocional y protección.",
+    imagen:"imagenes/piedras/piedra Apache Tear.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra de Lava (Basalto)",
+    frase: "Fuerza primigenia en cada latido.",
+    guia: "Estabilidad, energía y conexión con la tierra.",
+    imagen:"imagenes/piedras/Piedra de Lava (Basalto).jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra Fósil",
+    frase: "El tiempo revela tu fortaleza oculta.",
+    guia: "Paciencia y sabiduría ancestral.",
+    imagen:"imagenes/piedras/Piedra Fosil.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra de Luna Negra",
+    frase: "La oscuridad protege y renace en luz.",
+    guia: "Transformación y protección espiritual.",
+    imagen:"imagenes/piedras/Piedra de Luna Negra.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Jade Verde",
+    frase: "La prosperidad se cultiva desde el corazón.",
+    guia: "Abundancia, amor y salud.",
+    imagen:"imagenes/piedras/Jade Verde.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Jade Blanco",
+    frase: "Pureza y serenidad en tu camino.",
+    guia: "Paz interior y equilibrio emocional.",
+    imagen:"imagenes/piedras/Jade Blanco.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Jade Rojo",
+    frase: "La pasión vibrante despierta tu fuerza.",
+    guia: "Vitalidad y coraje.",
+    imagen:"imagenes/piedras/Jade Rojo.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Jade Amarillo",
+    frase: "La alegría se siembra en cada gesto.",
+    guia: "Felicidad, optimismo y claridad mental.",
+    imagen:"imagenes/piedras/Jade Amarillo.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Jade Nefrita",
+    frase: "La sabiduría antigua guía tu andar.",
+    guia: "Protección, equilibrio y buena suerte.",
+    imagen:"imagenes/piedras/Jade.jpg"
+}
+
+];
+
+const cartas = [
+{
+    tipo: "Tarot",
+    nombre: "El Loco",
+    frase: "El viaje comienza en la incertidumbre y la fe.",
+    guia: "Nuevos comienzos, espontaneidad y libertad."
+},
+{
+    tipo: "Tarot",
+    nombre: "El Mago",
+    frase: "El poder está en tus manos, crea tu realidad.",
+    guia: "Manifestación, creatividad y acción."
+},
+{
+    tipo: "Tarot",
+    nombre: "La Sacerdotisa",
+    frase: "Escucha el susurro de tu intuición profunda.",
+    guia: "Sabiduría interior, misterio y conocimiento oculto."
+},
+{
+    tipo: "Tarot",
+    nombre: "La Emperatriz",
+    frase: "La abundancia y la fertilidad florecen en ti.",
+    guia: "Creatividad, nutrición y conexión con la naturaleza."
+},
+{
+    tipo: "Tarot",
+    nombre: "El Emperador",
+    frase: "La estructura y el orden sostienen tu poder.",
+    guia: "Autoridad, estabilidad y liderazgo."
+},
+{
+    tipo: "Tarot",
+    nombre: "El Hierofante",
+    frase: "La tradición es puente hacia la sabiduría sagrada.",
+    guia: "Enseñanza, espiritualidad y comunidad."
+},
+{
+    tipo: "Tarot",
+    nombre: "Los Enamorados",
+    frase: "La elección del corazón define tu camino.",
+    guia: "Amor, unión y decisiones importantes."
+},
+{
+    tipo: "Tarot",
+    nombre: "El Carro",
+    frase: "La determinación te impulsa hacia la victoria.",
+    guia: "Voluntad, triunfo y control."
+},
+{
+    tipo: "Tarot",
+    nombre: "La Fuerza",
+    frase: "El valor suave vence cualquier miedo.",
+    guia: "Coraje, compasión y autocontrol."
+},
+{
+    tipo: "Tarot",
+    nombre: "El Ermitaño",
+    frase: "En el silencio interior encuentras la luz.",
+    guia: "Búsqueda espiritual, reflexión y soledad."
+},
+{
+    tipo: "Tarot",
+    nombre: "La Rueda de la Fortuna",
+    frase: "El cambio es la única constante en la vida.",
+    guia: "Ciclos, destino y movimiento."
+},
+{
+    tipo: "Tarot",
+    nombre: "La Justicia",
+    frase: "La verdad se equilibra con la responsabilidad.",
+    guia: "Equidad, verdad y consecuencias."
+},
+{
+    tipo: "Tarot",
+    nombre: "El Colgado",
+    frase: "La entrega abre nuevas perspectivas.",
+    guia: "Sacrificio, pausa y transformación."
+},
+{
+    tipo: "Tarot",
+    nombre: "La Muerte",
+    frase: "El final es el inicio de lo nuevo.",
+    guia: "Renovación, cambio profundo y liberación."
+},
+{
+    tipo: "Tarot",
+    nombre: "La Templanza",
+    frase: "El equilibrio armoniza tus aguas internas.",
+    guia: "Moderación, paciencia y sanación."
+},
+{
+    tipo: "Tarot",
+    nombre: "El Diablo",
+    frase: "Las cadenas son ilusiones que puedes romper.",
+    guia: "Ataduras, tentaciones y autoconocimiento."
+},
+{
+    tipo: "Tarot",
+    nombre: "La Torre",
+    frase: "La caída es preludio de la reconstrucción.",
+    guia: "Revelación, ruptura y cambio repentino."
+},
+{
+    tipo: "Tarot",
+    nombre: "La Estrella",
+    frase: "La esperanza brilla en la oscuridad.",
+    guia: "Inspiración, fe y renovación."
+},
+{
+    tipo: "Tarot",
+    nombre: "La Luna",
+    frase: "Los sueños revelan verdades ocultas.",
+    guia: "Intuición, misterio y emociones profundas."
+},
+{
+    tipo: "Tarot",
+    nombre: "El Sol",
+    frase: "La claridad y la alegría iluminan tu camino.",
+    guia: "Éxito, vitalidad y optimismo."
+},
+{
+    tipo: "Tarot",
+    nombre: "El Juicio",
+    frase: "El llamado interior despierta tu conciencia.",
+    guia: "Renacimiento, verdad y evaluación."
+},
+{
+    tipo: "Tarot",
+    nombre: "El Mundo",
+    frase: "La integración completa abre nuevos horizontes.",
+    guia: "Cierre, logro y realización."
+},
+{
+    tipo: "Tarot",
+    nombre: "As de Copas",
+    frase: "Un manantial de amor comienza a fluir.",
+    guia: "Inicio emocional, nueva conexión, bendición espiritual."
+},
+{
+    tipo: "Tarot",
+    nombre: "Dos de Copas",
+    frase: "Dos almas se reconocen en silencio.",
+    guia: "Unión, armonía en los vínculos, acuerdos del alma."
+},
+{
+    tipo: "Tarot",
+    nombre: "Tres de Copas",
+    frase: "Celebrá lo compartido, la alegría se expande.",
+    guia: "Fiesta, amistad, energía de comunidad."
+},
+{
+    tipo: "Tarot",
+    nombre: "Cuatro de Copas",
+    frase: "Lo que esperás puede estar frente a vos.",
+    guia: "Aburrimiento, introspección, oportunidades no vistas."
+},
+{
+    tipo: "Tarot",
+    nombre: "Cinco de Copas",
+    frase: "La pérdida enseña el valor de lo que queda.",
+    guia: "Duelo emocional, decepción, enfoque en lo perdido."
+},
+{
+    tipo: "Tarot",
+    nombre: "Seis de Copas",
+    frase: "La memoria dulce regresa a sanar.",
+    guia: "Nostalgia, infancia, emociones del pasado."
+},
+{
+    tipo: "Tarot",
+    nombre: "Siete de Copas",
+    frase: "Muchas opciones, no todo es lo que parece.",
+    guia: "Ilusiones, decisiones emocionales, fantasía."
+},
+{
+    tipo: "Tarot",
+    nombre: "Ocho de Copas",
+    frase: "Te alejás de lo conocido para crecer.",
+    guia: "Desapego, búsqueda interior, cambio emocional."
+},
+{
+    tipo: "Tarot",
+    nombre: "Nueve de Copas",
+    frase: "El deseo se realiza en plenitud serena.",
+    guia: "Satisfacción, realización emocional, bienestar."
+},
+{
+    tipo: "Tarot",
+    nombre: "Diez de Copas",
+    frase: "La armonía florece en el amor compartido.",
+    guia: "Felicidad familiar, paz interior, amor completo."
+},
+{
+    tipo: "Tarot",
+    nombre: "Sota de Copas",
+    frase: "El mensaje del alma llega suave y claro.",
+    guia: "Creatividad, sorpresa emocional, inocencia."
+},
+{
+    tipo: "Tarot",
+    nombre: "Caballero de Copas",
+    frase: "El corazón guía tus pasos hacia lo sagrado.",
+    guia: "Romance, idealismo, búsqueda del amor."
+},
+{
+    tipo: "Tarot",
+    nombre: "Reina de Copas",
+    frase: "Tu intuición es el océano donde habita tu verdad.",
+    guia: "Empatía, sabiduría emocional, ternura."
+},
+{
+    tipo: "Tarot",
+    nombre: "Rey de Copas",
+    frase: "El equilibrio del alma reina en tu trono interior.",
+    guia: "Madurez emocional, compasión, liderazgo sensible."
+},
+{
+    tipo: "Tarot",
+    nombre: "As de Bastos",
+    frase: "La chispa inicial enciende un nuevo camino.",
+    guia: "Inicio creativo, energía vital, motivación."
+},
+{
+    tipo: "Tarot",
+    nombre: "Dos de Bastos",
+    frase: "Observás el horizonte con decisión silenciosa.",
+    guia: "Planificación, visión de futuro, equilibrio de fuerzas."
+},
+{
+    tipo: "Tarot",
+    nombre: "Tres de Bastos",
+    frase: "El esfuerzo da frutos en el tiempo correcto.",
+    guia: "Expansión, progreso, manifestación cercana."
+},
+{
+    tipo: "Tarot",
+    nombre: "Cuatro de Bastos",
+    frase: "El fuego se vuelve celebración compartida.",
+    guia: "Estabilidad, alegría, festejo por logros alcanzados."
+},
+{
+    tipo: "Tarot",
+    nombre: "Cinco de Bastos",
+    frase: "Del caos nace la claridad si sabés mirar.",
+    guia: "Conflictos, competencia, necesidad de armonizar."
+},
+{
+    tipo: "Tarot",
+    nombre: "Seis de Bastos",
+    frase: "Avanzás con honra, porque tu fuego guió el camino.",
+    guia: "Reconocimiento, éxito visible, victoria."
+},
+{
+    tipo: "Tarot",
+    nombre: "Siete de Bastos",
+    frase: "Defendé tu llama con firmeza y fe.",
+    guia: "Defensa personal, desafío, mantenerse firme."
+},
+{
+    tipo: "Tarot",
+    nombre: "Ocho de Bastos",
+    frase: "Todo se acelera: confía en el flujo.",
+    guia: "Movimiento rápido, noticias, energía en marcha."
+},
+{
+    tipo: "Tarot",
+    nombre: "Nueve de Bastos",
+    frase: "Tu fortaleza nace de cada cicatriz.",
+    guia: "Resistencia, precaución, proteger lo logrado."
+},
+{
+    tipo: "Tarot",
+    nombre: "Diez de Bastos",
+    frase: "Soltá el peso que ya no te deja avanzar.",
+    guia: "Agobio, responsabilidad, necesidad de soltar cargas."
+},
+{
+    tipo: "Tarot",
+    nombre: "Sota de Bastos",
+    frase: "Una nueva pasión despierta en vos.",
+    guia: "Noticias, energía juvenil, curiosidad creativa."
+},
+{
+    tipo: "Tarot",
+    nombre: "Caballero de Bastos",
+    frase: "Tu impulso te lleva donde tu alma anhela.",
+    guia: "Aventura, energía intensa, acción impulsiva."
+},
+{
+    tipo: "Tarot",
+    nombre: "Reina de Bastos",
+    frase: "Sos fuego que inspira, brilla y transforma.",
+    guia: "Confianza, magnetismo, liderazgo creativo."
+},
+{
+    tipo: "Tarot",
+    nombre: "Rey de Bastos",
+    frase: "Tu visión se transforma en realidad ardiente.",
+    guia: "Autoridad, visión a largo plazo, acción decidida."
+},
+{
+    tipo: "Tarot",
+    nombre: "As de Espadas",
+    frase: "La verdad corta el velo de la confusión.",
+    guia: "Claridad mental, revelación, nuevos pensamientos."
+},
+{
+    tipo: "Tarot",
+    nombre: "Dos de Espadas",
+    frase: "El silencio es una espada que espera decidir.",
+    guia: "Indecisión, bloqueo emocional, equilibrio tenso."
+},
+{
+    tipo: "Tarot",
+    nombre: "Tres de Espadas",
+    frase: "El corazón herido también aprende a amar.",
+    guia: "Dolor, ruptura, verdad punzante que libera."
+},
+{
+    tipo: "Tarot",
+    nombre: "Cuatro de Espadas",
+    frase: "La mente descansa para sanar su batalla.",
+    guia: "Reposo, recuperación, pausa reflexiva."
+},
+{
+    tipo: "Tarot",
+    nombre: "Cinco de Espadas",
+    frase: "No toda victoria deja paz en el alma.",
+    guia: "Conflicto, manipulación, triunfo con pérdida."
+},
+{
+    tipo: "Tarot",
+    nombre: "Seis de Espadas",
+    frase: "Dejás atrás la tormenta, hacia nuevas aguas.",
+    guia: "Transición, cambio mental, viaje interior."
+},
+{
+    tipo: "Tarot",
+    nombre: "Siete de Espadas",
+    frase: "A veces hay que moverse en silencio.",
+    guia: "Estrategia, evasión, verdad oculta."
+},
+{
+    tipo: "Tarot",
+    nombre: "Ocho de Espadas",
+    frase: "Las cadenas están en tu mente, no en tu alma.",
+    guia: "Limitación, confusión mental, atrapamiento ilusorio."
+},
+{
+    tipo: "Tarot",
+    nombre: "Nueve de Espadas",
+    frase: "Los pensamientos nocturnos buscan tu compasión.",
+    guia: "Ansiedad, insomnio, miedos profundos."
+},
+{
+    tipo: "Tarot",
+    nombre: "Diez de Espadas",
+    frase: "El final más oscuro da lugar a la luz.",
+    guia: "Final doloroso, liberación inevitable, renacimiento."
+},
+{
+    tipo: "Tarot",
+    nombre: "Sota de Espadas",
+    frase: "La curiosidad afila tu visión interior.",
+    guia: "Espionaje, noticias, vigilancia, inicio intelectual."
+},
+{
+    tipo: "Tarot",
+    nombre: "Caballero de Espadas",
+    frase: "La verdad necesita avanzar sin miedo.",
+    guia: "Impulsividad mental, acción decidida, lucha por ideales."
+},
+{
+    tipo: "Tarot",
+    nombre: "Reina de Espadas",
+    frase: "Tu mente clara disuelve la ilusión.",
+    guia: "Independencia, inteligencia, discernimiento emocional."
+},
+{
+    tipo: "Tarot",
+    nombre: "Rey de Espadas",
+    frase: "La justicia se expresa a través de tu palabra.",
+    guia: "Autoridad lógica, sabiduría racional, liderazgo justo."
+},
+{
+    tipo: "Tarot",
+    nombre: "As de Oros",
+    frase: "Una semilla de oro florece en tu camino.",
+    guia: "Nuevas oportunidades, prosperidad, estabilidad naciente."
+},
+{
+    tipo: "Tarot",
+    nombre: "Dos de Oros",
+    frase: "Equilibrás el mundo con gracia danzante.",
+    guia: "Adaptabilidad, manejo de recursos, dualidad práctica."
+},
+{
+    tipo: "Tarot",
+    nombre: "Tres de Oros",
+    frase: "Construís en conjunto la obra que perdura.",
+    guia: "Trabajo en equipo, colaboración, reconocimiento inicial."
+},
+{
+    tipo: "Tarot",
+    nombre: "Cuatro de Oros",
+    frase: "A veces lo que protegés, también te encierra.",
+    guia: "Apego, seguridad material, resistencia al cambio."
+},
+{
+    tipo: "Tarot",
+    nombre: "Cinco de Oros",
+    frase: "La escasez no borra tu luz interna.",
+    guia: "Dificultades económicas, exclusión, necesidad de apoyo."
+},
+{
+    tipo: "Tarot",
+    nombre: "Seis de Oros",
+    frase: "Dar y recibir: un ciclo que nutre la tierra.",
+    guia: "Equilibrio en el dar, generosidad, ayuda mutua."
+},
+{
+    tipo: "Tarot",
+    nombre: "Siete de Oros",
+    frase: "La paciencia madura los frutos del esfuerzo.",
+    guia: "Evaluación, espera productiva, cosecha cercana."
+},
+{
+    tipo: "Tarot",
+    nombre: "Ocho de Oros",
+    frase: "El arte se forja con manos constantes.",
+    guia: "Disciplina, aprendizaje, perfeccionamiento."
+},
+{
+    tipo: "Tarot",
+    nombre: "Nueve de Oros",
+    frase: "Tu independencia florece en un jardín dorado.",
+    guia: "Autonomía, abundancia material, disfrute personal."
+},
+{
+    tipo: "Tarot",
+    nombre: "Diez de Oros",
+    frase: "La riqueza verdadera es la que se transmite.",
+    guia: "Legado, familia, estabilidad a largo plazo."
+},
+{
+    tipo: "Tarot",
+    nombre: "Sota de Oros",
+    frase: "Una nueva visión crece desde tus raíces.",
+    guia: "Estudio, nuevas ideas prácticas, comienzo material."
+},
+{
+    tipo: "Tarot",
+    nombre: "Caballero de Oros",
+    frase: "La constancia es tu aliada silenciosa.",
+    guia: "Responsabilidad, trabajo constante, confiabilidad."
+},
+{
+    tipo: "Tarot",
+    nombre: "Reina de Oros",
+    frase: "Tu calidez nutre como la tierra fértil.",
+    guia: "Generosidad, practicidad, energía maternal."
+},
+{
+    tipo: "Tarot",
+    nombre: "Rey de Oros",
+    frase: "El poder está en tu solidez y visión material.",
+    guia: "Estabilidad financiera, éxito logrado, liderazgo en lo concreto."
+}
+
+];
+
+const runas = [
+  {
+    tipo: "Runa",
+    nombre: "Fehu",
+    frase: "La abundancia fluye si sabés dejarla ir.",
+    guia: "Riqueza, inicio, energía vital, posesiones."
+},
+{
+    tipo: "Runa",
+    nombre: "Uruz",
+    frase: "La fuerza bruta se transforma en voluntad.",
+    guia: "Fuerza, salud, crecimiento, coraje."
+},
+{
+    tipo: "Runa",
+    nombre: "Thurisaz",
+    frase: "El caos también limpia el camino.",
+    guia: "Desafío, ruptura, protección espiritual."
+},
+{
+    tipo: "Runa",
+    nombre: "Ansuz",
+    frase: "La sabiduría llega como un susurro divino.",
+    guia: "Comunicación, inspiración, mensaje espiritual."
+},
+{
+    tipo: "Runa",
+    nombre: "Raidho",
+    frase: "El viaje es el verdadero destino.",
+    guia: "Movimiento, viaje, destino, alineación interna."
+},
+{
+    tipo: "Runa",
+    nombre: "Kenaz",
+    frase: "El fuego interno revela lo oculto.",
+    guia: "Claridad, visión interior, revelación, creatividad."
+},
+{
+    tipo: "Runa",
+    nombre: "Gebo",
+    frase: "Todo dar es también un recibir sagrado.",
+    guia: "Regalo, intercambio, generosidad, compromiso."
+},
+{
+    tipo: "Runa",
+    nombre: "Wunjo",
+    frase: "La alegría nace del alma que se alinea.",
+    guia: "Felicidad, armonía, dicha compartida, plenitud."
+},
+{
+    tipo: "Runa",
+    nombre: "Hagalaz",
+    frase: "De la tormenta surge el renacer.",
+    guia: "Cambio súbito, limpieza, transformación inevitable."
+},
+{
+    tipo: "Runa",
+    nombre: "Nauthiz",
+    frase: "La carencia te revela lo esencial.",
+    guia: "Necesidad, restricción, lección, resistencia interna."
+},
+{
+    tipo: "Runa",
+    nombre: "Isa",
+    frase: "El hielo preserva… y detiene.",
+    guia: "Estancamiento, pausa, meditación, espera."
+},
+{
+    tipo: "Runa",
+    nombre: "Jera",
+    frase: "Todo florece cuando es su tiempo.",
+    guia: "Cosecha, ciclo, justicia natural, recompensa."
+},
+{
+    tipo: "Runa",
+    nombre: "Eihwaz",
+    frase: "Tu eje interno es el puente entre mundos.",
+    guia: "Transformación, protección, conexión espiritual."
+},
+{
+    tipo: "Runa",
+    nombre: "Perthro",
+    frase: "Lo oculto se revela si confiás en el juego.",
+    guia: "Destino, misterio, intuición, magia oculta."
+},
+{
+    tipo: "Runa",
+    nombre: "Algiz",
+    frase: "Elevá tus ramas, conectá con la guía.",
+    guia: "Protección, conexión divina, defensa energética."
+},
+{
+    tipo: "Runa",
+    nombre: "Sowilo",
+    frase: "El sol interior disuelve toda sombra.",
+    guia: "Éxito, fuerza solar, claridad, energía vital."
+},
+{
+    tipo: "Runa",
+    nombre: "Tiwaz",
+    frase: "El valor justo abre los caminos del alma.",
+    guia: "Justicia, coraje, disciplina, propósito superior."
+},
+{
+    tipo: "Runa",
+    nombre: "Berkana",
+    frase: "Todo lo vivo brota desde el corazón fértil.",
+    guia: "Nacimiento, sanación, energía femenina, protección."
+},
+{
+    tipo: "Runa",
+    nombre: "Ehwaz",
+    frase: "Avanzás en armonía con tu verdadera esencia.",
+    guia: "Cambio positivo, cooperación, alianza espiritual."
+},
+{
+    tipo: "Runa",
+    nombre: "Mannaz",
+    frase: "En el otro, también estás vos.",
+    guia: "Humanidad, introspección, comunidad, conciencia del ser."
+},
+{
+    tipo: "Runa",
+    nombre: "Laguz",
+    frase: "Dejá que la corriente te muestre el camino.",
+    guia: "Intuición, fluidez, inconsciente, emociones profundas."
+},
+{
+    tipo: "Runa",
+    nombre: "Ingwaz",
+    frase: "La semilla está lista para despertar.",
+    guia: "Potencial, fertilidad, integración interna."
+},
+{
+    tipo: "Runa",
+    nombre: "Dagaz",
+    frase: "Cada noche guarda la promesa del amanecer.",
+    guia: "Iluminación, claridad, despertar espiritual, renovación."
+},
+{
+    tipo: "Runa",
+    nombre: "Othala",
+    frase: "La herencia verdadera es la sabiduría del alma.",
+    guia: "Legado, ancestros, tierra sagrada, pertenencia interior."
+}
+
+];
+
+// Función para mostrar un símbolo aleatorio del array dado
+function revelarSimbolo(tipo) {
+  let lista;
+  if(tipo === 'piedra') lista = piedras;
+  else if(tipo === 'carta') lista = cartas;
+  else if(tipo === 'runa') lista = runas;
+  else return;
+
+  const simbolo = lista[Math.floor(Math.random() * lista.length)];
+  const resultado = document.getElementById('resultado');
+
+   resultado.innerHTML = `
+    <h2>${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: ${simbolo.nombre}</h2>
+    ${simbolo.imagen ? `<img id="imagenSimbolo" src="${simbolo.imagen}" alt="${simbolo.nombre}" class="simbolo-img" onerror="this.style.display='none'">` : ''}
+    <p><em id="fraseSimbolo">${simbolo.frase}</em></p>
+    <p id="guiaSimbolo">${simbolo.guia}</p>
+    <div style="margin-top: 15px;">
+      <button onclick="descargarResultado()">Descargar</button>
+      <button onclick="compartirResultado()">Compartir</button>
+    </div>
+  `;
+}
+async function descargarResultado() {
+  const { jsPDF } = window.jspdf;
+
+  const nombre = document.querySelector('#resultado h2')?.innerText || 'Símbolo';
+  const frase = document.getElementById('fraseSimbolo')?.innerText || '';
+  const guia = document.getElementById('guiaSimbolo')?.innerText || '';
+  const imagenUrl = document.getElementById('imagenSimbolo')?.src;
+
+  const doc = new jsPDF();
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.text(nombre, 20, 30);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(14);
+  doc.text(`"${frase}"`, 20, 50);
+  doc.text(guia, 20, 70);
+
+  if (imagenUrl) {
+    try {
+      const imgData = await fetch(imagenUrl).then(r => r.blob()).then(blob => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      });
+
+      doc.addImage(imgData, 'JPEG', 130, 20, 60, 60); // derecha
+    } catch (e) {
+      console.warn("No se pudo cargar la imagen en el PDF:", e);
+    }
+  }
+
+  doc.save(`${nombre.replace(/\s+/g, '_')}.pdf`);
+}
+
+
+function compartirResultado() {
+  const nombre = document.querySelector('#resultado h2')?.innerText || '';
+  const frase = document.getElementById('fraseSimbolo')?.innerText || '';
+  const guia = document.getElementById('guiaSimbolo')?.innerText || '';
+  const texto = `${nombre}\n\n"${frase}"\n\n${guia}`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'Tu símbolo esotérico',
+      text: texto
+    }).catch((error) => console.log("No se pudo compartir:", error));
+  } else {
+    alert("Tu navegador no permite compartir directamente, pero podés copiar el texto manualmente.");
+  }
+}
+
+
+
+// Eventos botones
+document.getElementById('btnPiedras').addEventListener('click', () => revelarSimbolo('piedra'));
+document.getElementById('btnCartas').addEventListener('click', () => revelarSimbolo('carta'));
+document.getElementById('btnRunas').addEventListener('click', () => revelarSimbolo('runa'));
+
+
+// Efecto partículas simple (puede mejorar luego)
+const canvas = document.getElementById('particulas');
+const ctx = canvas.getContext('2d');
+let width, height;
+let particles = [];
+
+function resize() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+}
+
+function init() {
+  resize();
+  for(let i = 0; i < 100; i++) {
+    particles.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * 2 + 1,
+      speedX: (Math.random() - 0.5) * 0.2,
+      speedY: (Math.random() - 0.5) * 0.2,
+      alpha: Math.random()
+    });
+  }
+  animate();
+}
+
+
+
+function animate() {
+  ctx.clearRect(0, 0, width, height);
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(180,160,255,${p.alpha})`;
+    ctx.shadowColor = 'rgba(180,160,255,0.7)';
+    ctx.shadowBlur = 10;
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    p.x += p.speedX;
+    p.y += p.speedY;
+    if(p.x < 0) p.x = width;
+    if(p.x > width) p.x = 0;
+    if(p.y < 0) p.y = height;
+    if(p.y > height) p.y = 0;
+  });
+  requestAnimationFrame(animate);
+}
+
+window.addEventListener('resize', () => {
+  resize();
+  particles = [];
+  init();
+});
+function entrarAlOraculo() {
+  document.getElementById('pantalla-inicio').style.display = 'none';
+  document.getElementById('contenido-oraculo').style.display = 'block';
+
+  const sonido = document.getElementById('sonido-magico');
+  sonido.play().catch(() => {
+    console.log("El navegador bloqueó el sonido automático.");
+  });
+}
+
+init();
+
+</script>
+
+</body>
+</html>
