@@ -90,25 +90,17 @@
   }
  
 
-
-
-
-
-
-
-
-
-
-
 </style>
+
 </head>
+
 <body>
 
 <canvas id="particulas"></canvas>
     <!-- PANTALLA DE INICIO -->
 <div id="pantalla-inicio">
    
-    <h2>¿Estás preparada para descubrir tu carta, piedra o runa?</h2>
+    <h2>¿Estás preparada para descubrir tu carta, piedra o runa del dia de hoy?</h2>
   <button onclick="entrarAlOraculo()">Adelante</button>
 </div>
 
@@ -135,6 +127,7 @@
 <script>
 // Datos simplificados para ejemplo
 const piedras = [
+
   {nombre:"Amatista", 
   frase:"Silencio violeta. La voz interna florece en calma.", 
   guia:"Conectá con tu intuición.", 
@@ -168,30 +161,6 @@ const piedras = [
     frase: "La sabiduría antigua se activa en tu voz.",
     guia: "Piedra del tercer ojo y la verdad espiritual.",
     imagen:"imagenes/piedras/Lapislázuli.jpg"
-},
-
-{
-    tipo: "Piedra",
-    nombre: "Turmalina Negra",
-    frase: "Escudo invisible que protege sin límites.",
-    guia: "Protección energética potente contra negatividad.",
-    imagen:"imagenes/piedras/Turmalina Negra.jpg"
-},
-
-{
-    tipo: "Piedra",
-    nombre: "Aventurina Verde",
-    frase: "La abundancia es una forma de confianza.",
-    guia: "Atracción de buena suerte y oportunidades.",
-    imagen:"imagenes/piedras/Aventurina Verde.jpg"
-},
-
-{
-    tipo: "Piedra",
-    nombre: "Calcita Naranja",
-    frase: "Brillás cuando honrás tu placer.",
-    guia: "Energía creativa, alegría y liberación del cuerpo.",
-    imagen:"imagenes/piedras/Calcita Naranja.jpg"
 },
 
 {
@@ -474,21 +443,6 @@ const piedras = [
     imagen:"imagenes/piedras/Serpentina.jpg"
 },
 
-{
-    tipo: "Piedra",
-    nombre: "Kunzita",
-    frase: "Tu ternura también es poder.",
-    guia: "Amor espiritual, compasión y apertura del corazón.",
-    imagen:"imagenes/piedras/Kunzita.jpg"
-},
-
-{
-    tipo: "Piedra",
-    nombre: "Espato de Islandia",
-    frase: "La luz puede atravesar las sombras más densas.",
-    guia: "Claridad, inspiración y despertar espiritual.",
-    imagen:"imagenes/piedras/Espato de Islandia.jpg"
-},
 
 {
     tipo: "Piedra",
@@ -650,13 +604,6 @@ const piedras = [
     imagen:"imagenes/piedras/Epidota.jpg"
 },
 
-{
-    tipo: "Piedra",
-    nombre: "Halita",
-    frase: "La purificación limpia tu esencia más profunda.",
-    guia: "Claridad y renovación energética.",
-    imagen:"imagenes/piedras/Halita.jpg"
-},
 
 {
     tipo: "Piedra",
@@ -874,21 +821,6 @@ const piedras = [
     imagen:"imagenes/piedras/Piedra de Lava (Basalto).jpg"
 },
 
-{
-    tipo: "Piedra",
-    nombre: "Piedra Fósil",
-    frase: "El tiempo revela tu fortaleza oculta.",
-    guia: "Paciencia y sabiduría ancestral.",
-    imagen:"imagenes/piedras/Piedra Fosil.jpg"
-},
-
-{
-    tipo: "Piedra",
-    nombre: "Piedra de Luna Negra",
-    frase: "La oscuridad protege y renace en luz.",
-    guia: "Transformación y protección espiritual.",
-    imagen:"imagenes/piedras/Piedra de Luna Negra.jpg"
-},
 
 {
     tipo: "Piedra",
@@ -924,630 +856,827 @@ const piedras = [
 
 {
     tipo: "Piedra",
+    nombre: "Aventurina Verde",
+    frase: "La abundancia es una forma de confianza.",
+    guia: "Atracción de buena suerte y oportunidades.",
+    imagen:"imagenes/piedras/Aventurina Verde.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Calcita Naranja",
+    frase: "Brillás cuando honrás tu placer.",
+    guia: "Energía creativa, alegría y liberación del cuerpo.",
+    imagen:"imagenes/piedras/Calcita Naranja.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Kunzita",
+    frase: "Tu ternura también es poder.",
+    guia: "Amor espiritual, compasión y apertura del corazón.",
+    imagen:"imagenes/piedras/Kuncita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Espato de Islandia",
+    frase: "La luz puede atravesar las sombras más densas.",
+    guia: "Claridad, inspiración y despertar espiritual.",
+    imagen:"imagenes/piedras/Espato de Islandia.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Halita",
+    frase: "La purificación limpia tu esencia más profunda.",
+    guia: "Claridad y renovación energética.",
+    imagen:"imagenes/piedras/Halita.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra Fósil",
+    frase: "El tiempo revela tu fortaleza oculta.",
+    guia: "Paciencia y sabiduría ancestral.",
+    imagen:"imagenes/piedras/Piedra Fósil.jpg"
+},
+
+{
+    tipo: "Piedra",
+    nombre: "Piedra de Luna Negra",
+    frase: "La oscuridad protege y renace en luz.",
+    guia: "Transformación y protección espiritual.",
+    imagen:"imagenes/piedras/Piedra de Luna Negra.jpg"
+},
+
+
+{
+    tipo: "Piedra",
     nombre: "Jade Nefrita",
     frase: "La sabiduría antigua guía tu andar.",
     guia: "Protección, equilibrio y buena suerte.",
-    imagen:"imagenes/piedras/Jade.jpg"
+    imagen:"imagenes/piedras/Jade Nefrita.jpg"
 }
 
 ];
 
 const cartas = [
+
+//arcanos   
 {
     tipo: "Tarot",
     nombre: "El Loco",
     frase: "El viaje comienza en la incertidumbre y la fe.",
-    guia: "Nuevos comienzos, espontaneidad y libertad."
+    guia: "Nuevos comienzos, espontaneidad y libertad.",
+    imagen:"imagenes/cartas/arcanos/el loco.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "El Mago",
     frase: "El poder está en tus manos, crea tu realidad.",
-    guia: "Manifestación, creatividad y acción."
+    guia: "Manifestación, creatividad y acción.",
+    imagen:"imagenes/cartas/arcanos/el mago.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "La Sacerdotisa",
     frase: "Escucha el susurro de tu intuición profunda.",
-    guia: "Sabiduría interior, misterio y conocimiento oculto."
+    guia: "Sabiduría interior, misterio y conocimiento oculto.",
+    imagen:"imagenes/cartas/arcanos/la sacerdotisa.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "La Emperatriz",
     frase: "La abundancia y la fertilidad florecen en ti.",
-    guia: "Creatividad, nutrición y conexión con la naturaleza."
+    guia: "Creatividad, nutrición y conexión con la naturaleza.",
+    imagen:"imagenes/cartas/arcanos/la emperatriz.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "El Emperador",
     frase: "La estructura y el orden sostienen tu poder.",
-    guia: "Autoridad, estabilidad y liderazgo."
+    guia: "Autoridad, estabilidad y liderazgo.",
+    imagen:"imagenes/cartas/arcanos/el emperador.jpg"
 },
+
 {
     tipo: "Tarot",
-    nombre: "El Hierofante",
+    nombre: "El Papá",
     frase: "La tradición es puente hacia la sabiduría sagrada.",
-    guia: "Enseñanza, espiritualidad y comunidad."
+    guia: "Enseñanza, espiritualidad y comunidad.",
+    imagen:"imagenes/cartas/arcanos/el papa.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "Los Enamorados",
     frase: "La elección del corazón define tu camino.",
-    guia: "Amor, unión y decisiones importantes."
+    guia: "Amor, unión y decisiones importantes.",
+    imagen:"imagenes/cartas/arcanos/los enamorados.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "El Carro",
     frase: "La determinación te impulsa hacia la victoria.",
-    guia: "Voluntad, triunfo y control."
+    guia: "Voluntad, triunfo y control.",
+    imagen:"imagenes/cartas/arcanos/el carro.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "La Fuerza",
     frase: "El valor suave vence cualquier miedo.",
-    guia: "Coraje, compasión y autocontrol."
+    guia: "Coraje, compasión y autocontrol.",
+    imagen:"imagenes/cartas/arcanos/la fuerza.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "El Ermitaño",
     frase: "En el silencio interior encuentras la luz.",
-    guia: "Búsqueda espiritual, reflexión y soledad."
+    guia: "Búsqueda espiritual, reflexión y soledad.",
+    imagen:"imagenes/cartas/arcanos/el ermitaño.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "La Rueda de la Fortuna",
     frase: "El cambio es la única constante en la vida.",
-    guia: "Ciclos, destino y movimiento."
+    guia: "Ciclos, destino y movimiento.",
+    imagen:"imagenes/cartas/arcanos/la rueda de la fortuna.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "La Justicia",
     frase: "La verdad se equilibra con la responsabilidad.",
-    guia: "Equidad, verdad y consecuencias."
+    guia: "Equidad, verdad y consecuencias.",
+    imagen:"imagenes/cartas/arcanos/la justicia.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "El Colgado",
     frase: "La entrega abre nuevas perspectivas.",
-    guia: "Sacrificio, pausa y transformación."
+    guia: "Sacrificio, pausa y transformación.",
+    imagen:"imagenes/cartas/arcanos/el colgado.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "La Muerte",
     frase: "El final es el inicio de lo nuevo.",
-    guia: "Renovación, cambio profundo y liberación."
+    guia: "Renovación, cambio profundo y liberación.",
+    imagen:"imagenes/cartas/arcanos/la muerte.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "La Templanza",
     frase: "El equilibrio armoniza tus aguas internas.",
-    guia: "Moderación, paciencia y sanación."
+    guia: "Moderación, paciencia y sanación.",
+    imagen:"imagenes/cartas/arcanos/la templanza.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "El Diablo",
     frase: "Las cadenas son ilusiones que puedes romper.",
-    guia: "Ataduras, tentaciones y autoconocimiento."
+    guia: "Ataduras, tentaciones y autoconocimiento.",
+    imagen:"imagenes/cartas/arcanos/el diablo.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "La Torre",
     frase: "La caída es preludio de la reconstrucción.",
-    guia: "Revelación, ruptura y cambio repentino."
+    guia: "Revelación, ruptura y cambio repentino.",
+    imagen:"imagenes/cartas/arcanos/la torre.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "La Estrella",
     frase: "La esperanza brilla en la oscuridad.",
-    guia: "Inspiración, fe y renovación."
+    guia: "Inspiración, fe y renovación.",
+    imagen:"imagenes/cartas/arcanos/la estrella.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "La Luna",
     frase: "Los sueños revelan verdades ocultas.",
-    guia: "Intuición, misterio y emociones profundas."
+    guia: "Intuición, misterio y emociones profundas.",
+    imagen:"imagenes/cartas/arcanos/la luna.jpg"
 },
+
 {
     tipo: "Tarot",
     nombre: "El Sol",
     frase: "La claridad y la alegría iluminan tu camino.",
-    guia: "Éxito, vitalidad y optimismo."
+    guia: "Éxito, vitalidad y optimismo.",
+    imagen:"imagenes/cartas/arcanos/el sol.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "El Juicio",
     frase: "El llamado interior despierta tu conciencia.",
-    guia: "Renacimiento, verdad y evaluación."
+    guia: "Renacimiento, verdad y evaluación.",
+    imagen:"imagenes/cartas/arcanos/el juicio.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "El Mundo",
     frase: "La integración completa abre nuevos horizontes.",
-    guia: "Cierre, logro y realización."
+    guia: "Cierre, logro y realización.",
+    imagen:"imagenes/cartas/arcanos/el mundo.jpg"
 },
+
+//copas
 {
     tipo: "Tarot",
     nombre: "As de Copas",
     frase: "Un manantial de amor comienza a fluir.",
-    guia: "Inicio emocional, nueva conexión, bendición espiritual."
+    guia: "Inicio emocional, nueva conexión, bendición espiritual.",
+    imagen:"imagenes/cartas/copas/1.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Dos de Copas",
     frase: "Dos almas se reconocen en silencio.",
-    guia: "Unión, armonía en los vínculos, acuerdos del alma."
+    guia: "Unión, armonía en los vínculos, acuerdos del alma.",
+    imagen:"imagenes/cartas/copas/2.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Tres de Copas",
     frase: "Celebrá lo compartido, la alegría se expande.",
-    guia: "Fiesta, amistad, energía de comunidad."
+    guia: "Fiesta, amistad, energía de comunidad.",
+    imagen:"imagenes/cartas/copas/3.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Cuatro de Copas",
     frase: "Lo que esperás puede estar frente a vos.",
-    guia: "Aburrimiento, introspección, oportunidades no vistas."
+    guia: "Aburrimiento, introspección, oportunidades no vistas.",
+    imagen:"imagenes/cartas/copas/4.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Cinco de Copas",
     frase: "La pérdida enseña el valor de lo que queda.",
-    guia: "Duelo emocional, decepción, enfoque en lo perdido."
+    guia: "Duelo emocional, decepción, enfoque en lo perdido.",
+    imagen:"imagenes/cartas/copas/5.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Seis de Copas",
     frase: "La memoria dulce regresa a sanar.",
-    guia: "Nostalgia, infancia, emociones del pasado."
+    guia: "Nostalgia, infancia, emociones del pasado.",
+    imagen:"imagenes/cartas/copas/6.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Siete de Copas",
     frase: "Muchas opciones, no todo es lo que parece.",
-    guia: "Ilusiones, decisiones emocionales, fantasía."
+    guia: "Ilusiones, decisiones emocionales, fantasía.",
+    imagen:"imagenes/cartas/copas/7.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Ocho de Copas",
     frase: "Te alejás de lo conocido para crecer.",
-    guia: "Desapego, búsqueda interior, cambio emocional."
+    guia: "Desapego, búsqueda interior, cambio emocional.",
+    imagen:"imagenes/cartas/copas/8.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Nueve de Copas",
     frase: "El deseo se realiza en plenitud serena.",
-    guia: "Satisfacción, realización emocional, bienestar."
+    guia: "Satisfacción, realización emocional, bienestar.",
+    imagen:"imagenes/cartas/copas/9.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Diez de Copas",
     frase: "La armonía florece en el amor compartido.",
-    guia: "Felicidad familiar, paz interior, amor completo."
+    guia: "Felicidad familiar, paz interior, amor completo.",
+    imagen:"imagenes/cartas/copas/10.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Sota de Copas",
     frase: "El mensaje del alma llega suave y claro.",
-    guia: "Creatividad, sorpresa emocional, inocencia."
+    guia: "Creatividad, sorpresa emocional, inocencia.",
+    imagen:"imagenes/cartas/copas/sota.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Caballero de Copas",
     frase: "El corazón guía tus pasos hacia lo sagrado.",
-    guia: "Romance, idealismo, búsqueda del amor."
+    guia: "Romance, idealismo, búsqueda del amor.",
+    imagen:"imagenes/cartas/copas/caballo.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Reina de Copas",
     frase: "Tu intuición es el océano donde habita tu verdad.",
-    guia: "Empatía, sabiduría emocional, ternura."
+    guia: "Empatía, sabiduría emocional, ternura.",
+    imagen:"imagenes/cartas/copas/reina.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Rey de Copas",
     frase: "El equilibrio del alma reina en tu trono interior.",
-    guia: "Madurez emocional, compasión, liderazgo sensible."
+    guia: "Madurez emocional, compasión, liderazgo sensible.",
+    imagen:"imagenes/cartas/copas/rey.jpg"
 },
+
+
+ 
+//bastos
 {
     tipo: "Tarot",
     nombre: "As de Bastos",
     frase: "La chispa inicial enciende un nuevo camino.",
-    guia: "Inicio creativo, energía vital, motivación."
+    guia: "Inicio creativo, energía vital, motivación.",
+    imagen:"imagenes/cartas/bastos/1.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Dos de Bastos",
     frase: "Observás el horizonte con decisión silenciosa.",
-    guia: "Planificación, visión de futuro, equilibrio de fuerzas."
+    guia: "Planificación, visión de futuro, equilibrio de fuerzas.",
+    imagen:"imagenes/cartas/bastos/2.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Tres de Bastos",
     frase: "El esfuerzo da frutos en el tiempo correcto.",
-    guia: "Expansión, progreso, manifestación cercana."
+    guia: "Expansión, progreso, manifestación cercana.",
+    imagen:"imagenes/cartas/bastos/3.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Cuatro de Bastos",
     frase: "El fuego se vuelve celebración compartida.",
-    guia: "Estabilidad, alegría, festejo por logros alcanzados."
+    guia: "Estabilidad, alegría, festejo por logros alcanzados.",
+    imagen:"imagenes/cartas/bastos/4.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Cinco de Bastos",
     frase: "Del caos nace la claridad si sabés mirar.",
-    guia: "Conflictos, competencia, necesidad de armonizar."
+    guia: "Conflictos, competencia, necesidad de armonizar.",
+    imagen:"imagenes/cartas/bastos/5.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Seis de Bastos",
     frase: "Avanzás con honra, porque tu fuego guió el camino.",
-    guia: "Reconocimiento, éxito visible, victoria."
+    guia: "Reconocimiento, éxito visible, victoria.",
+    imagen:"imagenes/cartas/bastos/6.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Siete de Bastos",
     frase: "Defendé tu llama con firmeza y fe.",
-    guia: "Defensa personal, desafío, mantenerse firme."
+    guia: "Defensa personal, desafío, mantenerse firme.",
+    imagen:"imagenes/cartas/bastos/7.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Ocho de Bastos",
     frase: "Todo se acelera: confía en el flujo.",
-    guia: "Movimiento rápido, noticias, energía en marcha."
+    guia: "Movimiento rápido, noticias, energía en marcha.",
+    imagen:"imagenes/cartas/bastos/8.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Nueve de Bastos",
     frase: "Tu fortaleza nace de cada cicatriz.",
-    guia: "Resistencia, precaución, proteger lo logrado."
+    guia: "Resistencia, precaución, proteger lo logrado.",
+    imagen:"imagenes/cartas/bastos/9.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Diez de Bastos",
     frase: "Soltá el peso que ya no te deja avanzar.",
-    guia: "Agobio, responsabilidad, necesidad de soltar cargas."
+    guia: "Agobio, responsabilidad, necesidad de soltar cargas.",
+    imagen:"imagenes/cartas/bastos/10.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Sota de Bastos",
     frase: "Una nueva pasión despierta en vos.",
-    guia: "Noticias, energía juvenil, curiosidad creativa."
+    guia: "Noticias, energía juvenil, curiosidad creativa.",
+    imagen:"imagenes/cartas/bastos/sota.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Caballero de Bastos",
     frase: "Tu impulso te lleva donde tu alma anhela.",
-    guia: "Aventura, energía intensa, acción impulsiva."
+    guia: "Aventura, energía intensa, acción impulsiva.",
+    imagen:"imagenes/cartas/bastos/caballo.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Reina de Bastos",
     frase: "Sos fuego que inspira, brilla y transforma.",
-    guia: "Confianza, magnetismo, liderazgo creativo."
+    guia: "Confianza, magnetismo, liderazgo creativo.",
+    imagen:"imagenes/cartas/bastos/reina.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Rey de Bastos",
     frase: "Tu visión se transforma en realidad ardiente.",
-    guia: "Autoridad, visión a largo plazo, acción decidida."
+    guia: "Autoridad, visión a largo plazo, acción decidida.",
+    imagen:"imagenes/cartas/bastos/rey.jpg"
 },
+
+
+ 
+//espadas
 {
     tipo: "Tarot",
     nombre: "As de Espadas",
     frase: "La verdad corta el velo de la confusión.",
-    guia: "Claridad mental, revelación, nuevos pensamientos."
+    guia: "Claridad mental, revelación, nuevos pensamientos.",
+    imagen:"imagenes/cartas/espada/1.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Dos de Espadas",
     frase: "El silencio es una espada que espera decidir.",
-    guia: "Indecisión, bloqueo emocional, equilibrio tenso."
+    guia: "Indecisión, bloqueo emocional, equilibrio tenso.",
+    imagen:"imagenes/cartas/espada/2.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Tres de Espadas",
     frase: "El corazón herido también aprende a amar.",
-    guia: "Dolor, ruptura, verdad punzante que libera."
+    guia: "Dolor, ruptura, verdad punzante que libera.",
+    imagen:"imagenes/cartas/espada/3.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Cuatro de Espadas",
     frase: "La mente descansa para sanar su batalla.",
-    guia: "Reposo, recuperación, pausa reflexiva."
+    guia: "Reposo, recuperación, pausa reflexiva.",
+    imagen:"imagenes/cartas/espada/4.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Cinco de Espadas",
     frase: "No toda victoria deja paz en el alma.",
-    guia: "Conflicto, manipulación, triunfo con pérdida."
+    guia: "Conflicto, manipulación, triunfo con pérdida.",
+    imagen:"imagenes/cartas/espada/5.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Seis de Espadas",
     frase: "Dejás atrás la tormenta, hacia nuevas aguas.",
-    guia: "Transición, cambio mental, viaje interior."
+    guia: "Transición, cambio mental, viaje interior.",
+    imagen:"imagenes/cartas/espada/6.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Siete de Espadas",
     frase: "A veces hay que moverse en silencio.",
-    guia: "Estrategia, evasión, verdad oculta."
+    guia: "Estrategia, evasión, verdad oculta.",
+    imagen:"imagenes/cartas/espada/7.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Ocho de Espadas",
     frase: "Las cadenas están en tu mente, no en tu alma.",
-    guia: "Limitación, confusión mental, atrapamiento ilusorio."
+    guia: "Limitación, confusión mental, atrapamiento ilusorio.",
+    imagen:"imagenes/cartas/espada/8.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Nueve de Espadas",
     frase: "Los pensamientos nocturnos buscan tu compasión.",
-    guia: "Ansiedad, insomnio, miedos profundos."
+    guia: "Ansiedad, insomnio, miedos profundos.",
+    imagen:"imagenes/cartas/espada/9.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Diez de Espadas",
     frase: "El final más oscuro da lugar a la luz.",
-    guia: "Final doloroso, liberación inevitable, renacimiento."
+    guia: "Final doloroso, liberación inevitable, renacimiento.",
+    imagen:"imagenes/cartas/espada/10.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Sota de Espadas",
     frase: "La curiosidad afila tu visión interior.",
-    guia: "Espionaje, noticias, vigilancia, inicio intelectual."
+    guia: "Espionaje, noticias, vigilancia, inicio intelectual.",
+    imagen:"imagenes/cartas/espada/sota.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Caballero de Espadas",
     frase: "La verdad necesita avanzar sin miedo.",
-    guia: "Impulsividad mental, acción decidida, lucha por ideales."
+    guia: "Impulsividad mental, acción decidida, lucha por ideales.",
+    imagen:"imagenes/cartas/espada/caballo.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Reina de Espadas",
     frase: "Tu mente clara disuelve la ilusión.",
-    guia: "Independencia, inteligencia, discernimiento emocional."
+    guia: "Independencia, inteligencia, discernimiento emocional.",
+    imagen:"imagenes/cartas/espada/reina.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Rey de Espadas",
     frase: "La justicia se expresa a través de tu palabra.",
-    guia: "Autoridad lógica, sabiduría racional, liderazgo justo."
+    guia: "Autoridad lógica, sabiduría racional, liderazgo justo.",
+    imagen:"imagenes/cartas/espada/rey.jpg"
 },
+
+
+ 
+//oro
 {
     tipo: "Tarot",
     nombre: "As de Oros",
     frase: "Una semilla de oro florece en tu camino.",
-    guia: "Nuevas oportunidades, prosperidad, estabilidad naciente."
+    guia: "Nuevas oportunidades, prosperidad, estabilidad naciente.",
+    imagen:"imagenes/cartas/oro/1.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Dos de Oros",
     frase: "Equilibrás el mundo con gracia danzante.",
-    guia: "Adaptabilidad, manejo de recursos, dualidad práctica."
+    guia: "Adaptabilidad, manejo de recursos, dualidad práctica.",
+    imagen:"imagenes/cartas/oro/2.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Tres de Oros",
     frase: "Construís en conjunto la obra que perdura.",
-    guia: "Trabajo en equipo, colaboración, reconocimiento inicial."
+    guia: "Trabajo en equipo, colaboración, reconocimiento inicial.",
+    imagen:"imagenes/cartas/oro/3.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Cuatro de Oros",
     frase: "A veces lo que protegés, también te encierra.",
-    guia: "Apego, seguridad material, resistencia al cambio."
+    guia: "Apego, seguridad material, resistencia al cambio.",
+    imagen:"imagenes/cartas/oro/4.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Cinco de Oros",
     frase: "La escasez no borra tu luz interna.",
-    guia: "Dificultades económicas, exclusión, necesidad de apoyo."
+    guia: "Dificultades económicas, exclusión, necesidad de apoyo.",
+    imagen:"imagenes/cartas/oro/5.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Seis de Oros",
     frase: "Dar y recibir: un ciclo que nutre la tierra.",
-    guia: "Equilibrio en el dar, generosidad, ayuda mutua."
+    guia: "Equilibrio en el dar, generosidad, ayuda mutua.",
+    imagen:"imagenes/cartas/oro/6.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Siete de Oros",
     frase: "La paciencia madura los frutos del esfuerzo.",
-    guia: "Evaluación, espera productiva, cosecha cercana."
+    guia: "Evaluación, espera productiva, cosecha cercana.",
+    imagen:"imagenes/cartas/oro/7.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Ocho de Oros",
     frase: "El arte se forja con manos constantes.",
-    guia: "Disciplina, aprendizaje, perfeccionamiento."
+    guia: "Disciplina, aprendizaje, perfeccionamiento.",
+    imagen:"imagenes/cartas/oro/8.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Nueve de Oros",
     frase: "Tu independencia florece en un jardín dorado.",
-    guia: "Autonomía, abundancia material, disfrute personal."
+    guia: "Autonomía, abundancia material, disfrute personal.",
+    imagen:"imagenes/cartas/oro/9.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Diez de Oros",
     frase: "La riqueza verdadera es la que se transmite.",
-    guia: "Legado, familia, estabilidad a largo plazo."
+    guia: "Legado, familia, estabilidad a largo plazo.",
+    imagen:"imagenes/cartas/oro/10.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Sota de Oros",
     frase: "Una nueva visión crece desde tus raíces.",
-    guia: "Estudio, nuevas ideas prácticas, comienzo material."
+    guia: "Estudio, nuevas ideas prácticas, comienzo material.",
+    imagen:"imagenes/cartas/oro/sota.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Caballero de Oros",
     frase: "La constancia es tu aliada silenciosa.",
-    guia: "Responsabilidad, trabajo constante, confiabilidad."
+    guia: "Responsabilidad, trabajo constante, confiabilidad.",
+    imagen:"imagenes/cartas/oro/caballo.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Reina de Oros",
     frase: "Tu calidez nutre como la tierra fértil.",
-    guia: "Generosidad, practicidad, energía maternal."
+    guia: "Generosidad, practicidad, energía maternal.",
+    imagen:"imagenes/cartas/oro/reina.jpg"
 },
 {
     tipo: "Tarot",
     nombre: "Rey de Oros",
     frase: "El poder está en tu solidez y visión material.",
-    guia: "Estabilidad financiera, éxito logrado, liderazgo en lo concreto."
+    guia: "Estabilidad financiera, éxito logrado, liderazgo en lo concreto.",
+    imagen:"imagenes/cartas/oro/rey.jpg"
 }
+
+
+
 
 ];
 
 const runas = [
-  {
+ {
     tipo: "Runa",
     nombre: "Fehu",
     frase: "La abundancia fluye si sabés dejarla ir.",
-    guia: "Riqueza, inicio, energía vital, posesiones."
+    guia: "Riqueza, inicio, energía vital, posesiones.",
+    imagen:"imagenes/runas/fehu.jpg"
 },
 {
     tipo: "Runa",
     nombre: "Uruz",
     frase: "La fuerza bruta se transforma en voluntad.",
-    guia: "Fuerza, salud, crecimiento, coraje."
+    guia: "Fuerza, salud, crecimiento, coraje.",
+    imagen:"imagenes/runas/uruz.png"
 },
 {
     tipo: "Runa",
     nombre: "Thurisaz",
     frase: "El caos también limpia el camino.",
-    guia: "Desafío, ruptura, protección espiritual."
+    guia: "Desafío, ruptura, protección espiritual.",
+    imagen:"imagenes/runas/thurisaz.png"
 },
 {
     tipo: "Runa",
     nombre: "Ansuz",
     frase: "La sabiduría llega como un susurro divino.",
-    guia: "Comunicación, inspiración, mensaje espiritual."
+    guia: "Comunicación, inspiración, mensaje espiritual.",
+    imagen:"imagenes/runas/ansuz.jpg"
 },
 {
     tipo: "Runa",
     nombre: "Raidho",
     frase: "El viaje es el verdadero destino.",
-    guia: "Movimiento, viaje, destino, alineación interna."
+    guia: "Movimiento, viaje, destino, alineación interna.",
+    imagen:"imagenes/runas/raidho.png"
 },
 {
     tipo: "Runa",
     nombre: "Kenaz",
     frase: "El fuego interno revela lo oculto.",
-    guia: "Claridad, visión interior, revelación, creatividad."
+    guia: "Claridad, visión interior, revelación, creatividad.",
+    imagen:"imagenes/runas/kenaz.png"
 },
 {
     tipo: "Runa",
     nombre: "Gebo",
     frase: "Todo dar es también un recibir sagrado.",
-    guia: "Regalo, intercambio, generosidad, compromiso."
+    guia: "Regalo, intercambio, generosidad, compromiso.",
+    imagen:"imagenes/runas/gebo.png"
 },
 {
     tipo: "Runa",
     nombre: "Wunjo",
     frase: "La alegría nace del alma que se alinea.",
-    guia: "Felicidad, armonía, dicha compartida, plenitud."
+    guia: "Felicidad, armonía, dicha compartida, plenitud.",
+    imagen:"imagenes/runas/wunjo.jpg"
 },
 {
     tipo: "Runa",
     nombre: "Hagalaz",
     frase: "De la tormenta surge el renacer.",
-    guia: "Cambio súbito, limpieza, transformación inevitable."
+    guia: "Cambio súbito, limpieza, transformación inevitable.",
+    imagen:"imagenes/runas/hagalaz.jpg"
 },
 {
     tipo: "Runa",
     nombre: "Nauthiz",
     frase: "La carencia te revela lo esencial.",
-    guia: "Necesidad, restricción, lección, resistencia interna."
+    guia: "Necesidad, restricción, lección, resistencia interna.",
+    imagen:"imagenes/runas/nauthiz.jpg"
 },
 {
     tipo: "Runa",
     nombre: "Isa",
     frase: "El hielo preserva… y detiene.",
-    guia: "Estancamiento, pausa, meditación, espera."
+    guia: "Estancamiento, pausa, meditación, espera.",
+    imagen:"imagenes/runas/isa.jpg"
 },
 {
     tipo: "Runa",
     nombre: "Jera",
     frase: "Todo florece cuando es su tiempo.",
-    guia: "Cosecha, ciclo, justicia natural, recompensa."
+    guia: "Cosecha, ciclo, justicia natural, recompensa.",
+    imagen:"imagenes/runas/jera.png"
 },
 {
     tipo: "Runa",
     nombre: "Eihwaz",
     frase: "Tu eje interno es el puente entre mundos.",
-    guia: "Transformación, protección, conexión espiritual."
+    guia: "Transformación, protección, conexión espiritual.",
+    imagen:"imagenes/runas/eihwaz.png"
 },
 {
     tipo: "Runa",
     nombre: "Perthro",
     frase: "Lo oculto se revela si confiás en el juego.",
-    guia: "Destino, misterio, intuición, magia oculta."
+    guia: "Destino, misterio, intuición, magia oculta.",
+    imagen:"imagenes/runas/perthro.png"
 },
 {
     tipo: "Runa",
     nombre: "Algiz",
     frase: "Elevá tus ramas, conectá con la guía.",
-    guia: "Protección, conexión divina, defensa energética."
+    guia: "Protección, conexión divina, defensa energética.",
+    imagen:"imagenes/runas/algiz.png"
 },
 {
     tipo: "Runa",
     nombre: "Sowilo",
     frase: "El sol interior disuelve toda sombra.",
-    guia: "Éxito, fuerza solar, claridad, energía vital."
+    guia: "Éxito, fuerza solar, claridad, energía vital.",
+    imagen:"imagenes/runas/sowilo.png"
 },
 {
     tipo: "Runa",
     nombre: "Tiwaz",
     frase: "El valor justo abre los caminos del alma.",
-    guia: "Justicia, coraje, disciplina, propósito superior."
+    guia: "Justicia, coraje, disciplina, propósito superior.",
+    imagen:"imagenes/runas/tiwaz.png"
 },
 {
     tipo: "Runa",
     nombre: "Berkana",
     frase: "Todo lo vivo brota desde el corazón fértil.",
-    guia: "Nacimiento, sanación, energía femenina, protección."
+    guia: "Nacimiento, sanación, energía femenina, protección.",
+    imagen:"imagenes/runas/berkana.png"
 },
 {
     tipo: "Runa",
     nombre: "Ehwaz",
     frase: "Avanzás en armonía con tu verdadera esencia.",
-    guia: "Cambio positivo, cooperación, alianza espiritual."
+    guia: "Cambio positivo, cooperación, alianza espiritual.",
+    imagen:"imagenes/runas/ehwaz.png"
 },
 {
     tipo: "Runa",
     nombre: "Mannaz",
     frase: "En el otro, también estás vos.",
-    guia: "Humanidad, introspección, comunidad, conciencia del ser."
+    guia: "Humanidad, introspección, comunidad, conciencia del ser.",
+    imagen:"imagenes/runas/mannaz.png"
 },
 {
     tipo: "Runa",
     nombre: "Laguz",
     frase: "Dejá que la corriente te muestre el camino.",
-    guia: "Intuición, fluidez, inconsciente, emociones profundas."
+    guia: "Intuición, fluidez, inconsciente, emociones profundas.",
+    imagen:"imagenes/runas/laguz.png"
 },
 {
     tipo: "Runa",
     nombre: "Ingwaz",
     frase: "La semilla está lista para despertar.",
-    guia: "Potencial, fertilidad, integración interna."
+    guia: "Potencial, fertilidad, integración interna.",
+    imagen:"imagenes/runas/ingwaz.png"
 },
 {
     tipo: "Runa",
     nombre: "Dagaz",
     frase: "Cada noche guarda la promesa del amanecer.",
-    guia: "Iluminación, claridad, despertar espiritual, renovación."
+    guia: "Iluminación, claridad, despertar espiritual, renovación.",
+    imagen:"imagenes/runas/dagaz.png"
 },
 {
     tipo: "Runa",
     nombre: "Othala",
     frase: "La herencia verdadera es la sabiduría del alma.",
-    guia: "Legado, ancestros, tierra sagrada, pertenencia interior."
+    guia: "Legado, ancestros, tierra sagrada, pertenencia interior.",
+    imagen:"imagenes/runas/othala.png"
 }
 
 ];
@@ -1649,6 +1778,18 @@ function entrarAlOraculo() {
 }
 
 init();
+// PAUSA el audio cuando el usuario cambia de pestaña o sale de la página
+document.addEventListener('visibilitychange', function () {
+  const audio = document.getElementById('sonido-magico');
+  if (document.hidden) {
+    audio.pause();
+  } else {
+    audio.play().catch(() => {
+      console.log("El navegador bloqueó el sonido automático.");
+    });
+  }
+});
+
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
