@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Oráculo Esotérico</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 
 
 
@@ -1568,90 +1568,11 @@ function revelarSimbolo(tipo) {
     ${simbolo.imagen ? `<img id="imagenSimbolo" src="${simbolo.imagen}" alt="${simbolo.nombre}" class="simbolo-img" onerror="this.style.display='none'">` : ''}
     <p><em id="fraseSimbolo">${simbolo.frase}</em></p>
     <p id="guiaSimbolo">${simbolo.guia}</p>
-    <div style="margin-top: 15px;">
-      <button onclick="descargarResultado()">Descargar</button>
-      <button onclick="compartirResultado()">Compartir</button>
-    </div>
+    <button onclick="descargarYCompartirPDF()">Compartir / Descargar PDF</button>
+
   `;
 }
-async function descargarResultado() {
-  const { jsPDF } = window.jspdf;
 
-  const nombre = document.querySelector('#resultado h2')?.innerText || 'Símbolo';
-  const frase = document.getElementById('fraseSimbolo')?.innerText || '';
-  const guia = document.getElementById('guiaSimbolo')?.innerText || '';
-  const imagenUrl = document.getElementById('imagenSimbolo')?.src;
-
-  const doc = new jsPDF();
-
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(18);
-  doc.text(nombre, 20, 30);
-
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(14);
-  doc.text(`"${frase}"`, 20, 50);
-  doc.text(guia, 20, 70);
-
-  if (imagenUrl) {
-    try {
-      const imgData = await fetch(imagenUrl).then(r => r.blob()).then(blob => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.readAsDataURL(blob);
-        });
-      });
-
-      doc.addImage(imgData, 'JPEG', 130, 20, 60, 60); // derecha
-    } catch (e) {
-      console.warn("No se pudo cargar la imagen en el PDF:", e);
-    }
-  }
-
-  doc.save(`${nombre.replace(/\s+/g, '_')}.pdf`);
-}
-
-
-async function compartirResultado() {
-  const nombre = document.querySelector('#resultado h2')?.innerText || '';
-  const frase = document.getElementById('fraseSimbolo')?.innerText || '';
-  const guia = document.getElementById('guiaSimbolo')?.innerText || '';
-  const texto = `${nombre}\n\n"${frase}"\n\n${guia}`;
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  doc.setFontSize(16);
-  doc.text(nombre, 10, 20);
-  doc.setFontSize(12);
-  doc.text(frase, 10, 40);
-  doc.text(guia, 10, 60);
-
-  const pdfBlob = doc.output('blob');
-  const pdfFile = new File([pdfBlob], `${nombre.replace(/\s+/g, '_')}.pdf`, { type: 'application/pdf' });
-
-  if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-    try {
-      await navigator.share({
-        title: 'Tu símbolo esotérico',
-        text: nombre,
-        files: [pdfFile],
-      });
-    } catch (err) {
-      console.log("No se pudo compartir el PDF:", err);
-      alert("El navegador bloqueó el uso de compartir PDF.");
-    }
-  } else {
-    // Si no se puede compartir, simplemente lo descarga
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(pdfBlob);
-    link.download = `${nombre.replace(/\s+/g, '_')}.pdf`;
-    link.click();
-    URL.revokeObjectURL(link.href);
-    alert("Tu navegador no permite compartir, pero se descargó el PDF.");
-  }
-}
 
 
 
@@ -1729,6 +1650,75 @@ function entrarAlOraculo() {
 
 init();
 
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+async function descargarYCompartirPDF() {
+  const nombre = document.querySelector('#resultado h2')?.innerText || 'Símbolo';
+  const frase = document.getElementById('fraseSimbolo')?.innerText || '';
+  const guia = document.getElementById('guiaSimbolo')?.innerText || '';
+  const imagenURL = document.getElementById('imagenSimbolo')?.src;
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text(nombre, 10, 20);
+  doc.setFontSize(12);
+  doc.text(`"${frase}"`, 10, 35);
+  doc.text(guia, 10, 50);
+
+  try {
+    if (imagenURL) {
+      const base64 = await cargarImagenComoBase64(imagenURL);
+      doc.addImage(base64, 'JPEG', 10, 65, 100, 100);
+    }
+  } catch (error) {
+    console.warn('No se pudo agregar la imagen:', error);
+  }
+
+  const pdfBlob = doc.output("blob");
+  const pdfFile = new File([pdfBlob], `${nombre.replace(/\s+/g, '_')}.pdf`, {
+    type: 'application/pdf',
+  });
+
+  if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+    try {
+      await navigator.share({
+        title: 'Tu símbolo esotérico',
+        text: nombre,
+        files: [pdfFile],
+      });
+    } catch (err) {
+      console.warn("No se pudo compartir:", err);
+    }
+  } else {
+    // Fallback: descarga si no se puede compartir
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(pdfBlob);
+    link.download = `${nombre.replace(/\s+/g, '_')}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+
+// Convierte una imagen a base64
+function cargarImagenComoBase64(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous"; // Necesario para imágenes locales
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      canvas.getContext("2d").drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/jpeg"));
+    };
+    img.onerror = () => reject("Error cargando la imagen.");
+    img.src = url;
+  });
+}
 </script>
 
 </body>
