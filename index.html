@@ -1681,26 +1681,52 @@ const runas = [
 
 ];
 
+let piedraMostrada = false;
+let cartaMostrada = false;
+let runaMostrada = false;
+
+let cartaElegida = null;
+let piedraElegida = null;
+let runaElegida = null;
+
+
 // Función para mostrar un símbolo aleatorio del array dado
 function revelarSimbolo(tipo) {
-  let lista;
-  if(tipo === 'piedra') lista = piedras;
-  else if(tipo === 'carta') lista = cartas;
-  else if(tipo === 'runa') lista = runas;
-  else return;
+  let simbolo;
 
-  const simbolo = lista[Math.floor(Math.random() * lista.length)];
+  if (tipo === 'piedra') {
+    if (piedraElegida) simbolo = piedraElegida;
+    else {
+      piedraElegida = piedras[Math.floor(Math.random() * piedras.length)];
+      simbolo = piedraElegida;
+    }
+  } else if (tipo === 'carta') {
+    if (cartaElegida) simbolo = cartaElegida;
+    else {
+      cartaElegida = cartas[Math.floor(Math.random() * cartas.length)];
+      simbolo = cartaElegida;
+    }
+  } else if (tipo === 'runa') {
+    if (runaElegida) simbolo = runaElegida;
+    else {
+      runaElegida = runas[Math.floor(Math.random() * runas.length)];
+      simbolo = runaElegida;
+    }
+  } else {
+    return;
+  }
+
   const resultado = document.getElementById('resultado');
-
-   resultado.innerHTML = `
+  resultado.innerHTML = `
     <h2>${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: ${simbolo.nombre}</h2>
     ${simbolo.imagen ? `<img id="imagenSimbolo" src="${simbolo.imagen}" alt="${simbolo.nombre}" class="simbolo-img" onerror="this.style.display='none'">` : ''}
     <p><em id="fraseSimbolo">${simbolo.frase}</em></p>
     <p id="guiaSimbolo">${simbolo.guia}</p>
     <button onclick="descargarYCompartirPDF()">Compartir / Descargar PDF</button>
-
   `;
 }
+
+
 
 
 
@@ -1775,7 +1801,19 @@ function entrarAlOraculo() {
   sonido.play().catch(() => {
     console.log("El navegador bloqueó el sonido automático.");
   });
+
+  // Resetear estados
+  piedraMostrada = false;
+  cartaMostrada = false;
+  runaMostrada = false;
+
+  cartaElegida = null;
+piedraElegida = null;
+runaElegida = null;
+
+  document.getElementById('resultado').innerHTML = '';
 }
+
 
 init();
 // PAUSA el audio cuando el usuario cambia de pestaña o sale de la página
