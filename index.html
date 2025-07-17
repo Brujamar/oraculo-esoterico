@@ -1717,13 +1717,18 @@ function revelarSimbolo(tipo) {
   }
 
   const resultado = document.getElementById('resultado');
-  resultado.innerHTML = `
-    <h2>${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: ${simbolo.nombre}</h2>
-    ${simbolo.imagen ? `<img id="imagenSimbolo" src="${simbolo.imagen}" alt="${simbolo.nombre}" class="simbolo-img" onerror="this.style.display='none'">` : ''}
-    <p><em id="fraseSimbolo">${simbolo.frase}</em></p>
-    <p id="guiaSimbolo">${simbolo.guia}</p>
-    <button onclick="descargarYCompartirPDF()">Compartir / Descargar PDF</button>
-  `;
+resultado.innerHTML = `
+  <h2>${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: ${simbolo.nombre}</h2>
+  ${simbolo.imagen ? `<img id="imagenSimbolo" src="${simbolo.imagen}" alt="${simbolo.nombre}" class="simbolo-img" onerror="this.style.display='none'">` : ''}
+  <p><em id="fraseSimbolo">${simbolo.frase}</em></p>
+  <p id="guiaSimbolo">${simbolo.guia}</p>
+  <div class="acciones">
+    <button onclick="descargarPDF()">Descargar PDF</button>
+    <button onclick="compartirPDF()">Compartir PDF</button>
+  </div>
+`;
+
+
 }
 
 
@@ -1832,7 +1837,7 @@ document.addEventListener('visibilitychange', function () {
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-async function descargarYCompartirPDF() {
+async function generarPDFActual() {
   const nombre = document.querySelector('#resultado h2')?.innerText || 'Símbolo';
   const frase = document.getElementById('fraseSimbolo')?.innerText || '';
   const guia = document.getElementById('guiaSimbolo')?.innerText || '';
@@ -1844,7 +1849,7 @@ async function descargarYCompartirPDF() {
   doc.setFontSize(16);
   doc.text(nombre, 10, 20);
   doc.setFontSize(12);
-  doc.text(`"${frase}"`, 10, 35);
+  doc.text(frase, 10, 35);
   doc.text(guia, 10, 50);
 
   try {
@@ -1856,8 +1861,18 @@ async function descargarYCompartirPDF() {
     console.warn('No se pudo agregar la imagen:', error);
   }
 
+  return doc;
+}
+
+async function descargarPDF() {
+  const doc = await generarPDFActual();
+  doc.save('mi_simbolo.pdf');
+}
+
+async function compartirPDF() {
+  const doc = await generarPDFActual();
   const pdfBlob = doc.output("blob");
-  const pdfFile = new File([pdfBlob], `${nombre.replace(/\s+/g, '_')}.pdf`, {
+  const pdfFile = new File([pdfBlob], `mi_simbolo.pdf`, {
     type: 'application/pdf',
   });
 
@@ -1865,20 +1880,14 @@ async function descargarYCompartirPDF() {
     try {
       await navigator.share({
         title: 'Tu símbolo esotérico',
-        text: nombre,
+        text: 'Te comparto mi símbolo revelado',
         files: [pdfFile],
       });
     } catch (err) {
       console.warn("No se pudo compartir:", err);
     }
   } else {
-    // Fallback: descarga si no se puede compartir
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(pdfBlob);
-    link.download = `${nombre.replace(/\s+/g, '_')}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    alert("Tu navegador no permite compartir archivos PDF.");
   }
 }
 
@@ -1886,7 +1895,7 @@ async function descargarYCompartirPDF() {
 function cargarImagenComoBase64(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.crossOrigin = "anonymous"; // Necesario para imágenes locales
+    img.crossOrigin = "anonymous"; 
     img.onload = () => {
       const canvas = document.createElement("canvas");
       canvas.width = img.width;
@@ -1899,6 +1908,7 @@ function cargarImagenComoBase64(url) {
   });
 }
 </script>
+
 
 </body>
 </html>
